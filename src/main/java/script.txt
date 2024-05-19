@@ -1,0 +1,12 @@
+help
+show
+add
+nerg
+32
+43.5
+230
+1
+TRUSt
+nigeria
+execute_script src/script.txt
+execute_script src/l.txt
