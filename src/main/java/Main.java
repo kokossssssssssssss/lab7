@@ -1,8 +1,11 @@
 import Commands.Console;
+import DB.DBParser;
+import DB.DBWorker;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Main {
     private static final String DB_USERNAME = "postgres";
@@ -18,12 +21,6 @@ public class Main {
 //        Console console  = new Console();
 //        console.toStart();
 
-        try{
-            Connection connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            if(!connection.isClosed())
-                System.out.println("Соединение установлено");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println(DBParser.getOrganizationsFromDB());
     }
 }
