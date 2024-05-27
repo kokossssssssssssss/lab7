@@ -1,23 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
-public class HelpCommand implements Command {
+public class RemoveByIdCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public HelpCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public RemoveByIdCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.help();
+        dbReceiver.removeById();
     }
     /**
      * Method that returns command description
@@ -25,6 +27,6 @@ public class HelpCommand implements Command {
      */
     @Override
     public String description() {
-        return "help: помощь";
+        return "remove_by_id id: удалить элемент из коллекции по его id";
     }
 }

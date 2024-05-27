@@ -1,6 +1,7 @@
 import Commands.Console;
 import DB.DBFiller;
 import DB.DBParser;
+import DB.DBUser;
 import DB.DBWorker;
 
 import java.sql.Connection;
@@ -16,15 +17,6 @@ public class Main {
      * @param args parameters from the console
      */
     public static void main(String[] args) {
-//        Console console  = new Console();
-//        console.toStart();
-
-//        System.out.println(DBParser.getOrganizationsFromDB());
-        try {
-            DBFiller.fill();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        DBUser.toStart();
     }
 }

@@ -1,5 +1,9 @@
 package Commands;
 
+import Commands.DBCommands.AddCommand;
+import Commands.DBCommands.HelpCommand;
+import Commands.DBCommands.RemoveByIdCommand;
+import Commands.DBCommands.ShowCollectionCommand;
 import Organization.Filler;
 import Organization.*;
 import XML.XmlCommandsDOM;
@@ -64,7 +68,7 @@ public class CommandManager {
     }
 
     /**
-     * Command to call up descriptions of all commands{@link Commands.ConcreteCommands.HelpCommand}
+     * Command to call up descriptions of all commands{@link HelpCommand}
      */
     public void help() {
         for (Command com : commands.values()) {
@@ -107,7 +111,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that prints to the console all objects in a collection and their fields {@link Commands.ConcreteCommands.ShowCollectionCommand}
+     * A command that prints to the console all objects in a collection and their fields {@link ShowCollectionCommand}
      */
     public void show() {
         System.out.println("The collection: ");
@@ -116,7 +120,7 @@ public class CommandManager {
 
     /**
      * A command that adds a new object to the collection, created with {@link Filler} class methods
-     * {@link Commands.ConcreteCommands.AddCommand}
+     * {@link AddCommand}
      */
     public void add() {
         if (isScriptWorking) {
@@ -302,7 +306,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that allows you to delete an object by its id {@link Commands.ConcreteCommands.RemoveByIdCommand}
+     * A command that allows you to delete an object by its id {@link RemoveByIdCommand}
      */
     public void removeById() {
         try {

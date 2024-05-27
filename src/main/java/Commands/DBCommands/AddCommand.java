@@ -1,25 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
 public class AddCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public AddCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public AddCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
-
 
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.add();
+        dbReceiver.add();
     }
     /**
      * Method that returns command description

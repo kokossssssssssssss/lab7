@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="c44a1352-c50d-47c9-986c-f2a06841cbf2">
-      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[insert into organizations."Organization" ( "name", "Coordinates_ID", "annualTurnover", "employeesCount",  "type", "postalAddress_ID") values ('d',2,2,2,'COMMERCIAL', 16 )]]></console>
+      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[DELETE  FROM organizations."Organization" WHERE ID =  1]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

@@ -3,6 +3,7 @@ import Organization.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,8 +12,8 @@ import java.util.logging.Logger;
 public class DBParser {
     private static final Logger logger = Logger.getLogger(DBParser.class.getName());
 
-    public static List<Organization> getOrganizationsFromDB() {
-        List<Organization> organizations = new ArrayList<>();
+    public static LinkedList<Organization> getOrganizationsFromDB() {
+        LinkedList<Organization> organizations = new LinkedList<>();
 
         String query = "SELECT * FROM organizations.\"Organization\"";
         try (Connection connection = new DBWorker().getConnection();
