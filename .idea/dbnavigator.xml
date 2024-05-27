@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="c44a1352-c50d-47c9-986c-f2a06841cbf2">
-      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[insert into organizations."Organization" (id,name, "Coordinates_ID","annualTurnover","employeesCount", type, "postalAddress_ID") values (nextval('organizations."OrganizationIdSeq"'), 'org1', 1, 3, 4, 'COMMERCIAL',5)]]></console>
+      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[insert into organizations."Organization" ( "name", "Coordinates_ID", "annualTurnover", "employeesCount",  "type", "postalAddress_ID") values ('d',2,2,2,'COMMERCIAL', 16 )]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -25,9 +25,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="c44a1352-c50d-47c9-986c-f2a06841cbf2" object-ref="schemas/organizations/tables/Organization" />
-      <object connection-id="c44a1352-c50d-47c9-986c-f2a06841cbf2" object-ref="schemas/organizations/tables/Coordinates" />
-      <object connection-id="c44a1352-c50d-47c9-986c-f2a06841cbf2" object-ref="schemas/organizations/tables/Address" />
+      <object connection-id="c44a1352-c50d-47c9-986c-f2a06841cbf2" object-ref="consoles/Connection" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
@@ -44,6 +42,11 @@
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
+  </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces>
+      <mapping database-type="POSTGRES" interface-id="DEFAULT" />
+    </recently-used-interfaces>
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>

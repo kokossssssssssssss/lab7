@@ -2,9 +2,9 @@ package Organization;
 
 public class Coordinates {
     private Integer x;
-    private double y;
+    private float y;
 
-    public Coordinates(Integer x, double y) {
+    public Coordinates(Integer x, float y) {
         this.x = x;
         this.y = y;
     }
@@ -13,7 +13,7 @@ public class Coordinates {
         return x;
     }
 
-    public double getY() {
+    public float getY() {
         return y;
     }
 

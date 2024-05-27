@@ -9,7 +9,7 @@ public class DBWorker {
     private static final String DB_PASSWORD = "kjgfcnbyj";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
 
-    private static Connection connection;
+    static Connection connection;
 
 
     public DBWorker() {

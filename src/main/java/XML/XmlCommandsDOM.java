@@ -181,7 +181,7 @@ public class XmlCommandsDOM {
                             break;
                         case "coordinates":
                             int x = 0;
-                            double y = 0d;
+                            double y = 0.0f;
                             for (int coord = 0; coord < secondList.item(i2).getChildNodes().getLength(); coord++) {
                                 if (secondList.item(i2).getChildNodes().item(coord).getNodeType() != Node.ELEMENT_NODE) {
                                     continue;
@@ -190,10 +190,10 @@ public class XmlCommandsDOM {
                                     case "x":
                                         x = Integer.parseInt(secondList.item(i2).getChildNodes().item(coord).getTextContent());
                                     case "y":
-                                        y = Double.parseDouble(secondList.item(i2).getChildNodes().item(coord).getTextContent());
+                                        y = Float.parseFloat(secondList.item(i2).getChildNodes().item(coord).getTextContent());
                                 }
                             }
-                            coordinates = new Coordinates(x, y);
+                            coordinates = new Coordinates(x, (float) y);
                             break;
                         case "creationDate":
                             creationDate = Long.parseLong(secondList.item(i2).getTextContent());

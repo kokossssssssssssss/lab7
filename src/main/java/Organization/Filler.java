@@ -191,7 +191,7 @@ public class Filler {
             Organization organization = new Organization();
             organization.setId(new Date().getTime() + idCount);
             organization.setName(commands[0]);
-            organization.setCoordinates(new Coordinates(Integer.parseInt(commands[1]), Double.parseDouble(commands[2])));
+            organization.setCoordinates(new Coordinates(Integer.parseInt(commands[1]), Float.parseFloat(commands[2])));
             organization.setCreationDate(new Date());
             organization.setAnnualTurnover(Long.parseLong(commands[3]));
             organization.setEmployeesCount(Long.parseLong(commands[4]));
