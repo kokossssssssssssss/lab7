@@ -17,16 +17,15 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="c44a1352-c50d-47c9-986c-f2a06841cbf2">
-      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[update organizations.\"Organization\" set "name", "]]></console>
+      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[INSERT INTO organizations."User" (name, password) 
+VALUES ('user3', crypt('password2', ('sha224')));]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="c44a1352-c50d-47c9-986c-f2a06841cbf2" object-ref="consoles/Connection" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="c44a1352-c50d-47c9-986c-f2a06841cbf2" />

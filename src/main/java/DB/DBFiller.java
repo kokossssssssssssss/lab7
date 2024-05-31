@@ -7,82 +7,90 @@ import java.util.Scanner;
 
 public class DBFiller {
 
+
     public static  void fill() throws SQLException {
-        String query = "insert into organizations.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\") values ( ?, ?, ?, ?, ?, ?)";
-        Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
+        if (DBUserChecker.checkUser(name, password)) {
 
-        String name;
-        while(true) {
-            System.out.println("Enter name: ");
-            name = scanner.nextLine();
-            if (name == null || name.isEmpty()) {
-                System.out.println("Name can't be null ...");
-            } else {
-                break;
+            String query = "insert into organizations.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\", \"user_name\") values ( ?, ?, ?, ?, ?, ?, ?)";
+            Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+
+
+            String orgName;
+            while (true) {
+                System.out.println("Enter name of organization: ");
+                orgName = scanner.nextLine();
+                if (orgName == null || orgName.isEmpty()) {
+                    System.out.println("Name can't be null ...");
+                } else {
+                    break;
+                }
             }
-        }
 
-        int coordinatesID = fillCoordinates();
+            int coordinatesID = fillCoordinates();
 
-        long annualTurnover;
-        while(true) {
-            System.out.println("Enter annual turnover: ");
-            try {
+            long annualTurnover;
+            while (true) {
+                System.out.println("Enter annual turnover: ");
+                try {
                     annualTurnover = Long.parseLong(scanner.nextLine());
                     if (annualTurnover > 0) {
-                    break;
-                } else {
-                    System.out.println("Annual turnover must be more than 0 ...");
+                        break;
+                    } else {
+                        System.out.println("Annual turnover must be more than 0 ...");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Annual turnover must be a number ...");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Annual turnover must be a number ...");
             }
-        }
 
-        long employeesCount;
-        while(true){
-            System.out.println("Enter number of employees: ");
-            try {
+            long employeesCount;
+            while (true) {
+                System.out.println("Enter number of employees: ");
+                try {
                     employeesCount = Long.parseLong(scanner.nextLine());
-                    if(employeesCount > 0){
-                    break;
-                }else{
-                    System.out.println("Number of employees must be more than 0 ...");
+                    if (employeesCount > 0) {
+                        break;
+                    } else {
+                        System.out.println("Number of employees must be more than 0 ...");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Number of employees must be a number ...");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Number of employees must be a number ...");
             }
-        }
 
-        OrganizationType type;
-        while(true) {
-            System.out.println("Choose type of Organization: COMMERCIAL, GOVERNMENT, TRUST or OPEN_JOINT_STOCK_COMPANY");
-            try{
-                type = OrganizationType.valueOf(scanner.nextLine());
-                break;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Entered a wrong type ...");
+            OrganizationType type;
+            while (true) {
+                System.out.println("Choose type of Organization: COMMERCIAL, GOVERNMENT, TRUST or OPEN_JOINT_STOCK_COMPANY");
+                try {
+                    type = OrganizationType.valueOf(scanner.nextLine());
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Entered a wrong type ...");
+                }
             }
+
+            int addressID = fillAddress();
+
+            preparedStatement.setString(1, orgName);
+            preparedStatement.setInt(2, coordinatesID);
+            preparedStatement.setLong(3, annualTurnover);
+            preparedStatement.setLong(4, employeesCount);
+            preparedStatement.setObject(5, type, java.sql.Types.OTHER);
+            preparedStatement.setInt(6, addressID);
+            preparedStatement.setString(7, name);
+
+            preparedStatement.executeUpdate();
+
+
         }
-
-        int addressID = fillAddress();
-
-        preparedStatement.setString(1, name);
-        preparedStatement.setInt(2, coordinatesID);
-        preparedStatement.setLong(3, annualTurnover);
-        preparedStatement.setLong(4, employeesCount);
-        preparedStatement.setObject(5, type, java.sql.Types.OTHER);
-        preparedStatement.setInt(6, addressID);
-
-        preparedStatement.executeUpdate();
-
-
     }
-
-
 
     private static int fillCoordinates(){
         int coordinatesID = 0;

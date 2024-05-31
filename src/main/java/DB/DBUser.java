@@ -2,6 +2,7 @@ package DB;
 
 import Commands.Command;
 import Commands.DBCommands.*;
+import Commands.DBCommands.UserCommands.RegisterCommand;
 import Organization.OrganizationCollection;
 
 import java.util.Scanner;
@@ -21,7 +22,8 @@ public class DBUser {
                 new ExitCommand(dbReceiver),
                 new InsertAnIndexCommand(dbReceiver),
                 new SortCommand(dbReceiver),
-                new InfoCommand(dbReceiver)
+                new InfoCommand(dbReceiver),
+                new RegisterCommand(dbReceiver)
         );
         dbReceiver.setCommands(dbInvoker.getCommandMap());
 

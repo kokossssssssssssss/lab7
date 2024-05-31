@@ -5,10 +5,7 @@ import Organization.Organization;
 import Organization.OrganizationCollection;
 import Organization.UpdaterOfCollection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -34,14 +31,16 @@ public class DBReceiver {
         this.commands = commands;
     }
 
-    public void add(){
-        try{
-            DBFiller.fill();
-            UpdaterOfCollection.updateCollection(organizationCollection);
-        } catch (SQLException e) {
-            System.out.println("Failed to add organization...");
-        }
+    public void add() {
+
+            try {
+                DBFiller.fill();
+                UpdaterOfCollection.updateCollection(organizationCollection);
+            } catch (SQLException e) {
+                System.out.println("Failed to add organization...");
+            }
     }
+
 
     public void show(){
         for(Organization organization: organizationCollection.getCollection()){
@@ -49,16 +48,40 @@ public class DBReceiver {
         }
     }
 
-    public void removeById(){
+    public void removeById() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name: ");
+        String name = scanner.nextLine();
+        String correctName;
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
         int id = Integer.parseInt(tokens[1]);
-
-        String query = "DELETE  FROM organizations.\"Organization\" WHERE id = " + id;
+        String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
         try {
             Statement statement = new DBWorker().getConnection().createStatement();
-            statement.execute(query);
-            UpdaterOfCollection.updateCollection(organizationCollection);
+            ResultSet rs = statement.executeQuery(queryUser);
+            if(rs.next()){
+                correctName = rs.getString(1);
+            }else{
+                return;
+            }
         } catch (SQLException e) {
-            System.out.println("Failed to remove organization...");
+            System.out.println("Can't define the creator of this organization...");
+            return;
+        }
+        if (DBUserChecker.checkUser(name, password)) {
+            if (name.equals(correctName)) {
+                String query = "DELETE  FROM organizations.\"Organization\" WHERE id = " + id;
+                try {
+                    Statement statement = new DBWorker().getConnection().createStatement();
+                    statement.execute(query);
+                    UpdaterOfCollection.updateCollection(organizationCollection);
+                } catch (SQLException e) {
+                    System.out.println("Failed to remove organization...");
+                }
+            }else{
+                System.out.println("You haven't access to this organization...");
+            }
         }
     }
 
@@ -70,29 +93,34 @@ public class DBReceiver {
     }
 
     public void clear(){
-        String queryOrgs = "DELETE FROM organizations.\"Organization\";";
-        String queryCoords = "DELETE FROM organizations.\"Coordinates\";";
-        String queryAddress = "DELETE FROM organizations.\"Address\";";
-
-        try{
-            Statement statement = new DBWorker().getConnection().createStatement();
-
-
-            int deletedOrgs = statement.executeUpdate(queryOrgs);
-            System.out.println("Number of deleted organizations: " + deletedOrgs);
-            UpdaterOfCollection.updateCollection(organizationCollection);
-
-            int deletedCoords = statement.executeUpdate(queryCoords);
-            System.out.println("Number of deleted coordinates: " + deletedCoords);
-
-            int deletedAddress = statement.executeUpdate(queryAddress);
-            System.out.println("Number of deleted addresses: " + deletedAddress);
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
+        if (DBUserChecker.checkUser(name, password)) {
+            String queryOrgs = "DELETE FROM organizations.\"Organization\" where \"user_name\" = '" + name + "'";
+            try{
+                Statement statement = new DBWorker().getConnection().createStatement();
 
 
-        } catch (SQLException e) {
-            System.out.println("Error by removing...");
-            e.printStackTrace();
+                int deletedOrgs = statement.executeUpdate(queryOrgs);
+                System.out.println("Number of deleted organizations: " + deletedOrgs);
+                UpdaterOfCollection.updateCollection(organizationCollection);
+
+
+            } catch (SQLException e) {
+                System.out.println("Error by removing...");
+                e.printStackTrace();
+            }
+
+
+
         }
+
+
+
+
 
     }
 
@@ -109,14 +137,39 @@ public class DBReceiver {
     }
 
     public void update(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your name: ");
+        String name = scanner.nextLine();
+        String correctName;
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
         int id = Integer.parseInt(tokens[1]);
-
+        String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
         try {
-            DBFillerForUpdate.fill(id);
-            UpdaterOfCollection.updateCollection(organizationCollection);
+            Statement statement = new DBWorker().getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(queryUser);
+            if(rs.next()){
+                correctName = rs.getString(1);
+            }else{
+                return;
+            }
         } catch (SQLException e) {
-            System.out.println("Error by updating organization...");
+            System.out.println("Can't define the creator of this organization...");
+            return;
         }
+        if (DBUserChecker.checkUser(name, password)) {
+            if (name.equals(correctName)) {
+                try {
+                    DBFillerForUpdate.fill(id);
+                    UpdaterOfCollection.updateCollection(organizationCollection);
+                } catch (SQLException e) {
+                    System.out.println("Error by updating organization...");
+                }
+            }else{
+                System.out.println("You haven't access to this organization...");
+            }
+        }
+
     }
 
     public void exit(){
@@ -160,6 +213,30 @@ public class DBReceiver {
     public void info(){
         System.out.print("Collection information:");
         System.out.println(organizationCollection);
+    }
+
+    public void register() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter name: ");
+        String name = scanner.nextLine();
+
+        System.out.println("Enter password: ");
+        String password1 = scanner.nextLine();
+        System.out.println("Repeat password: ");
+        String password2 = scanner.nextLine();
+        if (password1.equals(password2)) {
+            String query = "INSERT INTO organizations.\"User\" (name, password) VALUES ('" + name + "', crypt('" + password1 + "', ('sha224')));";
+
+            try {
+                Connection connection = new DBWorker().getConnection();
+                Statement statement = connection.createStatement();
+                statement.execute(query);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            System.out.println("Entered passwords don't match...");
+        }
     }
 
 }

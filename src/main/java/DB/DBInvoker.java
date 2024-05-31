@@ -8,7 +8,7 @@ import java.util.Map;
 public class DBInvoker {
     Map<String, Command> commandMap= new HashMap<>();
 
-    public DBInvoker(Command add, Command show, Command removeById, Command help, Command clear, Command filterTurnover, Command update, Command exit, Command insertAt, Command sort, Command info) {
+    public DBInvoker(Command add, Command show, Command removeById, Command help, Command clear, Command filterTurnover, Command update, Command exit, Command insertAt, Command sort, Command info, Command register) {
         commandMap.put("add", add);
         commandMap.put("show", show);
         commandMap.put("remove_by_id", removeById);
@@ -20,6 +20,7 @@ public class DBInvoker {
         commandMap.put("insert_at", insertAt);
         commandMap.put("sort", sort);
         commandMap.put("info", info);
+        commandMap.put("register", register);
     }
 
     public Map<String, Command> getCommandMap() {
