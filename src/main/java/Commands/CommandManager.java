@@ -1,9 +1,6 @@
 package Commands;
 
-import Commands.DBCommands.AddCommand;
-import Commands.DBCommands.HelpCommand;
-import Commands.DBCommands.RemoveByIdCommand;
-import Commands.DBCommands.ShowCollectionCommand;
+import Commands.DBCommands.*;
 import Organization.Filler;
 import Organization.*;
 import XML.XmlCommandsDOM;
@@ -94,7 +91,7 @@ public class CommandManager {
     }
 
     /**
-     * Command to exit the application {@link Commands.ConcreteCommands.ExitCommand}
+     * Command to exit the application {@link ExitCommand}
      */
     public void exit() {
         System.out.println("Session ended");
@@ -102,7 +99,7 @@ public class CommandManager {
     }
 
     /**
-     * Command to clear a collection {@link Commands.ConcreteCommands.ClearCollectionCommand}
+     * Command to clear a collection {@link ClearCollectionCommand}
      */
     public void clear() {
         collection.getCollection().clear();
@@ -134,7 +131,7 @@ public class CommandManager {
     }
 
     /**
-     * Command showing information about the current state of a collection {@link Commands.ConcreteCommands.InfoCommand}
+     * Command showing information about the current state of a collection {@link InfoCommand}
      *
      * @see OrganizationCollection
      */
@@ -144,7 +141,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that allows you to insert a new object at a given index in the collection {@link Commands.ConcreteCommands.InsertAnIndexCommand}
+     * A command that allows you to insert a new object at a given index in the collection {@link InsertAnIndexCommand}
      */
     public void insertAt() {
         try {
@@ -183,7 +180,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that allows you to update an object with a given id {@link Commands.ConcreteCommands.UpdateCommand}
+     * A command that allows you to update an object with a given id {@link UpdateCommand}
      */
     public void update() {
         try {
@@ -340,7 +337,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that sorts a collection in the standard way {@link Commands.ConcreteCommands.SortCommand}
+     * A command that sorts a collection in the standard way {@link SortCommand}
      *
      * @see Organization#compareTo(Organization)
      */
@@ -351,7 +348,7 @@ public class CommandManager {
     }
 
     /**
-     * A command that removes items from a collection that have less than a specified annual turnover{@link Commands.ConcreteCommands.FilterGreaterThanAnnualTurnoverCommand}
+     * A command that removes items from a collection that have less than a specified annual turnover{@link FilterGreaterThanAnnualTurnoverCommand}
      */
     public void filterTurnover() {
         try {

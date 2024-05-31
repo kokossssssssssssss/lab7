@@ -1,13 +1,4 @@
-import Commands.Console;
-import DB.DBFiller;
-import DB.DBParser;
 import DB.DBUser;
-import DB.DBWorker;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Main {
 

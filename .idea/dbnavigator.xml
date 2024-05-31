@@ -17,7 +17,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="c44a1352-c50d-47c9-986c-f2a06841cbf2">
-      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[DELETE  FROM organizations."Organization" WHERE ID =  1]]></console>
+      <console name="Connection" type="STANDARD" schema="organizations" session="Main"><![CDATA[update organizations.\"Organization\" set "name", "]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

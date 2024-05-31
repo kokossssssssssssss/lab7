@@ -1,10 +1,7 @@
 package DB;
 
 import Commands.Command;
-import Commands.DBCommands.AddCommand;
-import Commands.DBCommands.HelpCommand;
-import Commands.DBCommands.RemoveByIdCommand;
-import Commands.DBCommands.ShowCollectionCommand;
+import Commands.DBCommands.*;
 import Organization.OrganizationCollection;
 
 import java.util.Scanner;
@@ -17,7 +14,14 @@ public class DBUser {
                 new AddCommand(dbReceiver),
                 new ShowCollectionCommand(dbReceiver),
                 new RemoveByIdCommand(dbReceiver),
-                new HelpCommand(dbReceiver)
+                new HelpCommand(dbReceiver),
+                new ClearCollectionCommand(dbReceiver),
+                new FilterGreaterThanAnnualTurnoverCommand(dbReceiver),
+                new UpdateCommand(dbReceiver),
+                new ExitCommand(dbReceiver),
+                new InsertAnIndexCommand(dbReceiver),
+                new SortCommand(dbReceiver),
+                new InfoCommand(dbReceiver)
         );
         dbReceiver.setCommands(dbInvoker.getCommandMap());
 

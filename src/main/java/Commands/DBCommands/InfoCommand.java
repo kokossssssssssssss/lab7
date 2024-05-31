@@ -1,23 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
-public class InsertAnIndexCommand implements Command {
+public class InfoCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public InsertAnIndexCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public InfoCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.insertAt();
+        dbReceiver.info();
     }
     /**
      * Method that returns command description
@@ -25,6 +27,6 @@ public class InsertAnIndexCommand implements Command {
      */
     @Override
     public String description() {
-        return "insert_at index {element}: добавить новый элемент в заданную позицию";
+        return "info: вывести в стандартный поток вывода информацию о коллекции";
     }
 }

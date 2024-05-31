@@ -5,10 +5,9 @@ import Organization.OrganizationType;
 import java.sql.*;
 import java.util.Scanner;
 
-public class DBFiller {
-
-    public static  void fill() throws SQLException {
-        String query = "insert into organizations.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\") values ( ?, ?, ?, ?, ?, ?)";
+public class DBFillerForUpdate {
+    public static  void fill(int id) throws SQLException {
+        String query = "update organizations.\"Organization\" set \"name\" =?, \"Coordinates_ID\"=?, \"annualTurnover\"=?, \"employeesCount\"=?,  \"type\"=?, \"postalAddress_ID\"=? where id =" + id;
         Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных
         PreparedStatement preparedStatement = connection.prepareStatement(query);
 
@@ -31,8 +30,8 @@ public class DBFiller {
         while(true) {
             System.out.println("Enter annual turnover: ");
             try {
-                    annualTurnover = Long.parseLong(scanner.nextLine());
-                    if (annualTurnover > 0) {
+                annualTurnover = Long.parseLong(scanner.nextLine());
+                if (annualTurnover > 0) {
                     break;
                 } else {
                     System.out.println("Annual turnover must be more than 0 ...");
@@ -46,8 +45,8 @@ public class DBFiller {
         while(true){
             System.out.println("Enter number of employees: ");
             try {
-                    employeesCount = Long.parseLong(scanner.nextLine());
-                    if(employeesCount > 0){
+                employeesCount = Long.parseLong(scanner.nextLine());
+                if(employeesCount > 0){
                     break;
                 }else{
                     System.out.println("Number of employees must be more than 0 ...");
@@ -78,8 +77,6 @@ public class DBFiller {
         preparedStatement.setInt(6, addressID);
 
         preparedStatement.executeUpdate();
-
-
     }
 
 
@@ -128,37 +125,37 @@ public class DBFiller {
         return coordinatesID;
     }
 
-private static int fillAddress() {
-    int addressID = 0;
-    Scanner addressScanner = new Scanner(System.in);
-    String zipCode = null;
+    private static int fillAddress() {
+        int addressID = 0;
+        Scanner addressScanner = new Scanner(System.in);
+        String zipCode = null;
 
-    while (true) {
-        System.out.println("Enter zip code: ");
-        zipCode = addressScanner.nextLine();
-        if (zipCode == null || zipCode.isEmpty()) {
-            System.out.println("Zip code can't be null ...");
-        } else {
-            break;
+        while (true) {
+            System.out.println("Enter zip code: ");
+            zipCode = addressScanner.nextLine();
+            if (zipCode == null || zipCode.isEmpty()) {
+                System.out.println("Zip code can't be null ...");
+            } else {
+                break;
+            }
         }
-    }
 
-    String insertAddressQuery = "INSERT INTO organizations.\"Address\" ( \"zipCode\") VALUES ( ?)";
+        String insertAddressQuery = "INSERT INTO organizations.\"Address\" ( \"zipCode\") VALUES ( ?)";
 
-    try  {
-        Connection connection = DBWorker.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(insertAddressQuery, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, zipCode);
-        preparedStatement.executeUpdate();
+        try  {
+            Connection connection = DBWorker.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(insertAddressQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, zipCode);
+            preparedStatement.executeUpdate();
 
-        ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            addressID = generatedKeys.getInt(1);
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                addressID = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    }
 
-    return addressID;
-}
+        return addressID;
+    }
 }

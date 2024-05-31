@@ -1,7 +1,10 @@
 package Commands;
 
 import Commands.ConcreteCommands.*;
-import Commands.DBCommands.HelpCommand;
+import Commands.DBCommands.ExitCommand;
+import Commands.DBCommands.InfoCommand;
+import Commands.DBCommands.InsertAnIndexCommand;
+import Commands.DBCommands.SortCommand;
 import Organization.*;
 import XML.XmlCommandsDOM;
 
@@ -38,19 +41,19 @@ public class Console {
         XmlCommandsDOM xml = new XmlCommandsDOM(collection);
         CommandManager commandManager = new CommandManager(collection, xml, commands);
 //        commands.put("help", new HelpCommand(commandManager));
-        commands.put("save", new SaveToXmlCommand(commandManager));
-        commands.put("clear", new ClearCollectionCommand(commandManager));
+        //commands.put("save", new SaveToXmlCommand(commandManager));
+        //commands.put("clear", new ClearCollectionCommand(commandManager));
 //        commands.put("show", new ShowCollectionCommand(commandManager));
-        commands.put("exit", new ExitCommand(commandManager));
+        //commands.put("exit", new ExitCommand(commandManager));
 //        commands.put("add", new AddCommand(commandManager));
-        commands.put("info", new InfoCommand(commandManager));
-        commands.put("insert_at", new InsertAnIndexCommand(commandManager));
-        commands.put("update", new UpdateCommand(commandManager));
+        //commands.put("info", new InfoCommand(commandManager));
+        //commands.put("insert_at", new InsertAnIndexCommand(commandManager));
+       // commands.put("update", new UpdateCommand(commandManager));
         commands.put("execute_script", new ExecuteScriptCommand(commandManager));
         commands.put("remove_lower", new RemoveLowerCommand(commandManager));
 //        commands.put("remove_by_id", new RemoveByIdCommand(commandManager));
-        commands.put("sort", new SortCommand(commandManager));
-        commands.put("filter_greater_than_annual_turnover", new FilterGreaterThanAnnualTurnoverCommand(commandManager));
+        //commands.put("sort", new SortCommand(commandManager));
+       // commands.put("filter_greater_than_annual_turnover", new FilterGreaterThanAnnualTurnoverCommand(commandManager));
         commands.put("remove_any_by_type", new RemoveAnyByTypeCommand(commandManager));
         commands.put("print_ascending", new PrintAscendingCommand(commandManager));
         System.out.println("Print the command");

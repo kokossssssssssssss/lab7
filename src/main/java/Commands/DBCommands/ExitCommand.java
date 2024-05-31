@@ -1,23 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
 public class ExitCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public ExitCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public ExitCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.exit();
+        dbReceiver.exit();
     }
     /**
      * Method that returns command description

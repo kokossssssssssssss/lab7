@@ -1,23 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
-public class ClearCollectionCommand implements Command {
+public class UpdateCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public ClearCollectionCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public UpdateCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.clear();
+        dbReceiver.update();
     }
     /**
      * Method that returns command description
@@ -25,6 +27,6 @@ public class ClearCollectionCommand implements Command {
      */
     @Override
     public String description() {
-        return "clear: очистить коллекцию";
+        return "update id {element}: обновить значение элемента коллекции, id которого равен заданному";
     }
 }

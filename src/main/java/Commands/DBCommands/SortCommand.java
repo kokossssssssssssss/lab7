@@ -1,17 +1,19 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
 public class SortCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public SortCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public SortCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * Method that returns command description
      * @return Command description
@@ -25,6 +27,6 @@ public class SortCommand implements Command {
      */
     @Override
     public void execute() {
-        commandManager.sort();
+        dbReceiver.sort();
     }
 }

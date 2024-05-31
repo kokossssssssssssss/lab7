@@ -1,23 +1,25 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
-public class SaveToXmlCommand implements Command {
+public class InsertAnIndexCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
+    DBReceiver dbReceiver;
 
-    public SaveToXmlCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    public InsertAnIndexCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.save();
+        dbReceiver.insertAt();
     }
     /**
      * Method that returns command description
@@ -25,6 +27,6 @@ public class SaveToXmlCommand implements Command {
      */
     @Override
     public String description() {
-        return "save: сохранить коллекцию в файл";
+        return "insert_at index {element}: добавить новый элемент в заданную позицию";
     }
 }

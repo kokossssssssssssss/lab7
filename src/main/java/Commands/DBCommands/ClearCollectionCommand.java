@@ -1,23 +1,26 @@
-package Commands.ConcreteCommands;
+package Commands.DBCommands;
 
 import Commands.Command;
 import Commands.CommandManager;
+import DB.DBReceiver;
 
-public class InfoCommand implements Command {
+public class ClearCollectionCommand implements Command {
     /**
      * A field that refers to an object with implementations of all commands
      */
-    CommandManager commandManager;
 
-    public InfoCommand(CommandManager commandManager) {
-        this.commandManager = commandManager;
+    DBReceiver dbReceiver;
+
+    public ClearCollectionCommand(DBReceiver dbReceiver) {
+        this.dbReceiver = dbReceiver;
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */
     @Override
     public void execute() {
-        commandManager.info();
+        dbReceiver.clear();
     }
     /**
      * Method that returns command description
@@ -25,6 +28,6 @@ public class InfoCommand implements Command {
      */
     @Override
     public String description() {
-        return "info: вывести в стандартный поток вывода информацию о коллекции";
+        return "clear: очистить коллекцию";
     }
 }
