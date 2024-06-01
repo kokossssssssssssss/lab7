@@ -1,7 +1,7 @@
 package Commands.DBCommands;
 
 import Commands.Command;
-import Commands.CommandManager;
+
 import DB.DBReceiver;
 
 public class UpdateCommand implements Command {

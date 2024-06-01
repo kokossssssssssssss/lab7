@@ -29,11 +29,6 @@ public class DBInvoker {
 
     public void executeCommand(String commandName){
         Command command = commandMap.get(commandName);
-        if(command!=null){
-            command.execute();;
-        }else{
-            System.out.println("Unknown command...");
-        }
-
+        command.execute();
     }
 }

@@ -36,7 +36,12 @@ public class DBUser {
             dbReceiver.setTokens(tokens);
 
             Command command = dbInvoker.commandMap.get(tokens[0]);
-            command.execute();
+            try{
+                command.execute();
+            } catch (Exception e) {
+                System.out.println("Unknown command...");
+            }
+
         }
     }
 }

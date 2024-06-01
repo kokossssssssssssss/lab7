@@ -17,8 +17,8 @@ public class DBWorker {
         // Устанавливаем соединение с базой данных
         try{
             connection = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-            if(!connection.isClosed())
-                System.out.println("Соединение установлено");
+//            if(!connection.isClosed())
+//                System.out.println("Connected to DB successfully");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
