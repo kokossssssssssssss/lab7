@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBWorker {
     private static final String DB_USERNAME = "postgres";
-    private static final String DB_PASSWORD = "kjgfcnbyj";
+    private static final String DB_PASSWORD = "root";
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
 
     static Connection connection;

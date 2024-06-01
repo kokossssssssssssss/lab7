@@ -23,7 +23,10 @@ public class DBUser {
                 new InsertAnIndexCommand(dbReceiver),
                 new SortCommand(dbReceiver),
                 new InfoCommand(dbReceiver),
-                new RegisterCommand(dbReceiver)
+                new RegisterCommand(dbReceiver),
+                new PrintAscendingCommand(dbReceiver),
+                new RemoveAnyByTypeCommand(dbReceiver),
+                new RemoveLowerCommand(dbReceiver)
         );
         dbReceiver.setCommands(dbInvoker.getCommandMap());
 
