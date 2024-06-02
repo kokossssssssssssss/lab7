@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class DBFillerForUpdate {
     public static  void fill(int id) throws SQLException {
-        String query = "update organizations.\"Organization\" set \"name\" =?, \"Coordinates_ID\"=?, \"annualTurnover\"=?, \"employeesCount\"=?,  \"type\"=?, \"postalAddress_ID\"=? where id =" + id;
+        String query = "update s409333.\"Organization\" set \"name\" =?, \"Coordinates_ID\"=?, \"annualTurnover\"=?, \"employeesCount\"=?,  \"type\"=?, \"postalAddress_ID\"=? where id =" + id;
         Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных
         PreparedStatement preparedStatement = connection.prepareStatement(query);
 
@@ -104,11 +104,11 @@ public class DBFillerForUpdate {
                 System.out.println("Coordinate must be a number...");
             }
         }
-        String queryCoord = "insert into organizations.\"Coordinates\" (x, y) values (" +  x + " ," + y + ")";
+        String queryCoord = "insert into s409333.\"Coordinates\" (x, y) values (" +  x + " ," + y + ")";
         try{
             Statement coordStatement = DBWorker.getConnection().createStatement();
             coordStatement.execute(queryCoord);
-            String queryCoordId = "select * from organizations.\"Coordinates\" where x = " + x + " and y =" + y;
+            String queryCoordId = "select * from s409333.\"Coordinates\" where x = " + x + " and y =" + y;
 
             try{
                 Statement coordIdStatement = DBWorker.getConnection().createStatement();
@@ -140,7 +140,7 @@ public class DBFillerForUpdate {
             }
         }
 
-        String insertAddressQuery = "INSERT INTO organizations.\"Address\" ( \"zipCode\") VALUES ( ?)";
+        String insertAddressQuery = "INSERT INTO s409333.\"Address\" ( \"zipCode\") VALUES ( ?)";
 
         try  {
             Connection connection = DBWorker.getConnection();

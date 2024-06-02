@@ -2,6 +2,7 @@ package DB;
 
 import Commands.Command;
 import Organization.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.sql.*;
 import java.util.*;
@@ -57,7 +58,7 @@ public class DBReceiver {
         if (!new CheckerOfOrganization(organizationCollection).checkById(id)) {
             return;
         }
-        String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
+        String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
         try {
             Statement statement = new DBWorker().getConnection().createStatement();
             ResultSet rs = statement.executeQuery(queryUser);
@@ -72,7 +73,7 @@ public class DBReceiver {
         }
         if (DBUserChecker.checkUser(name, password)) {
             if (name.equals(correctName)) {
-                String query = "DELETE  FROM organizations.\"Organization\" WHERE id = " + id;
+                String query = "DELETE  FROM s409333.\"Organization\" WHERE id = " + id;
                 try {
                     Statement statement = new DBWorker().getConnection().createStatement();
                     statement.execute(query);
@@ -100,7 +101,7 @@ public class DBReceiver {
         System.out.println("Enter password: ");
         String password = scanner.nextLine();
         if (DBUserChecker.checkUser(name, password)) {
-            String queryOrgs = "DELETE FROM organizations.\"Organization\" where \"user_name\" = '" + name + "'";
+            String queryOrgs = "DELETE FROM s409333.\"Organization\" where \"user_name\" = '" + name + "'";
             try {
                 Statement statement = new DBWorker().getConnection().createStatement();
 
@@ -142,7 +143,7 @@ public class DBReceiver {
             return;
         }
 
-        String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
+        String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
         try {
             Statement statement = new DBWorker().getConnection().createStatement();
             ResultSet rs = statement.executeQuery(queryUser);
@@ -223,8 +224,8 @@ public class DBReceiver {
         System.out.println("Repeat password: ");
         String password2 = scanner.nextLine();
         if (password1.equals(password2)) {
-            String query = "INSERT INTO organizations.\"User\" (name, password) VALUES ('" + name + "', crypt('" + password1 + "', ('sha224')));";
-
+            String hash_password = DigestUtils.sha3_224Hex(password2);
+            String query = "INSERT INTO s409333.\"User\" (name, password) VALUES ('" + name + "', '" + hash_password + "');";
             try {
                 Connection connection = new DBWorker().getConnection();
                 Statement statement = connection.createStatement();
@@ -264,7 +265,7 @@ public class DBReceiver {
         System.out.println("Enter password: ");
         String password = scanner.nextLine();
         DBUserChecker.checkUser(name, password);
-        String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
+        String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
         try {
             Statement statement = new DBWorker().getConnection().createStatement();
             ResultSet rs = statement.executeQuery(queryUser);
@@ -291,7 +292,7 @@ public class DBReceiver {
                     long id2;
                     for (int i = 0; i < list.size(); i++) {
                         id2 = list.get(i).getId();
-                        String query = "DELETE FROM organizations.\"Organization\" WHERE id = " + id2;
+                        String query = "DELETE FROM s409333.\"Organization\" WHERE id = " + id2 + ", user_name = " + name;
                         Statement statement = new DBWorker().getConnection().createStatement();
                         statement.execute(query);
                         UpdaterOfCollection.updateCollection(organizationCollection);
@@ -326,6 +327,7 @@ public class DBReceiver {
             Optional<Organization> organization = organizationCollection.getCollection().stream().filter(o -> o.getType() == organizationCollection.getLastOrganizationTypeWorkedWith()).findAny();
             if (organization.isEmpty()) {
                 System.out.println("There isn't any organization with type: " + organizationCollection.getLastOrganizationTypeWorkedWith().name);
+                return;
             } else {
                 id = organization.get().getId();
             }
@@ -335,8 +337,7 @@ public class DBReceiver {
             String correctName;
             System.out.println("Enter password: ");
             String password = scanner.nextLine();
-            DBUserChecker.checkUser(name, password);
-            String queryUser = "select \"user_name\" from organizations.\"Organization\" where id = " + id;
+            String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
             try {
                 Statement statement = new DBWorker().getConnection().createStatement();
                 ResultSet rs = statement.executeQuery(queryUser);
@@ -352,7 +353,7 @@ public class DBReceiver {
             if (DBUserChecker.checkUser(name, password)) {
                 if (name.equals(correctName)) {
                     try {
-                            String query = "DELETE  FROM organizations.\"Organization\" WHERE id = " + id;
+                            String query = "DELETE  FROM s409333.\"Organization\" WHERE id = " + id;
                             Statement statement = new DBWorker().getConnection().createStatement();
                             statement.execute(query);
                             UpdaterOfCollection.updateCollection(organizationCollection);

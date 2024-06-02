@@ -1,5 +1,7 @@
 package DB;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.sql.*;
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class DBUserChecker {
         }
     }
     private static boolean checkUserName(String userNameToCheck){//проверка наличия пользователя с указанным именем
-        String query = "select exists (select 1 from organizations.\"User\" where name =? )";
+        String query = "select exists (select 1 from s409333.\"User\" where name =? )";
 
         try  {
             Connection conn = new DBWorker().getConnection();
@@ -36,8 +38,7 @@ public class DBUserChecker {
     }
 
     private static boolean checkPassword(String username, String password){
-        String query = "select password from organizations.\"User\" where name = ?";
-
+        String query = "select password from s409333.\"User\" where name = ?";
         try(Connection connection = DBWorker.getConnection();
             PreparedStatement pstmt = connection.prepareStatement(query)){
             pstmt.setString(1, username);
@@ -56,19 +57,6 @@ public class DBUserChecker {
     }
 
     private static String hashPassword(String password) {
-        String query = "SELECT crypt(?, ('sha224'))";
-        try (Connection conn = DBWorker.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, password);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString(1);
-            } else {
-                return null;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error by encoding...");
-            return null;
-        }
+        return DigestUtils.sha3_224Hex(password);
     }
 }

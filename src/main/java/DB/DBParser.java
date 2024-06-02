@@ -15,7 +15,7 @@ public class DBParser {
     public static LinkedList<Organization> getOrganizationsFromDB() {
         LinkedList<Organization> organizations = new LinkedList<>();
 
-        String query = "SELECT * FROM organizations.\"Organization\"";
+        String query = "SELECT * FROM s409333.\"Organization\"";
         try (Connection connection = new DBWorker().getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
@@ -66,7 +66,7 @@ public class DBParser {
     }
 
     public static Coordinates getCoordinatesFromDB(Connection connection, int coordId) {
-        String queryCoord = "SELECT * FROM organizations.\"Coordinates\" WHERE id = ?";
+        String queryCoord = "SELECT * FROM s409333.\"Coordinates\" WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(queryCoord)) {
             statement.setInt(1, coordId);
             try (ResultSet resultSetCoord = statement.executeQuery()) {
@@ -83,7 +83,7 @@ public class DBParser {
     }
 
     public static Address getAddressFromDB(Connection connection, int addressId) {
-        String queryAddress = "SELECT * FROM organizations.\"Address\" WHERE id = ?";
+        String queryAddress = "SELECT * FROM s409333.\"Address\" WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(queryAddress)) {
             statement.setInt(1, addressId);
             try (ResultSet resultSetAddress = statement.executeQuery()) {

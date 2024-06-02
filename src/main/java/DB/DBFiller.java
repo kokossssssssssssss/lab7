@@ -16,7 +16,7 @@ public class DBFiller {
         String password = scanner.nextLine();
         if (DBUserChecker.checkUser(name, password)) {
 
-            String query = "insert into organizations.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\", \"user_name\") values ( ?, ?, ?, ?, ?, ?, ?)";
+            String query = "insert into s409333.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\", \"user_name\") values ( ?, ?, ?, ?, ?, ?, ?)";
             Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
@@ -115,11 +115,11 @@ public class DBFiller {
                 System.out.println("Coordinate must be a number...");
             }
         }
-        String queryCoord = "insert into organizations.\"Coordinates\" (x, y) values (" +  x + " ," + y + ")";
+        String queryCoord = "insert into s409333.\"Coordinates\" (x, y) values (" +  x + " ," + y + ")";
         try{
             Statement coordStatement = DBWorker.getConnection().createStatement();
             coordStatement.execute(queryCoord);
-            String queryCoordId = "select * from organizations.\"Coordinates\" where x = " + x + " and y =" + y;
+            String queryCoordId = "select * from s409333.\"Coordinates\" where x = " + x + " and y =" + y;
 
             try{
                 Statement coordIdStatement = DBWorker.getConnection().createStatement();
@@ -151,7 +151,7 @@ private static int fillAddress() {
         }
     }
 
-    String insertAddressQuery = "INSERT INTO organizations.\"Address\" ( \"zipCode\") VALUES ( ?)";
+    String insertAddressQuery = "INSERT INTO s409333.\"Address\" ( \"zipCode\") VALUES ( ?)";
 
     try  {
         Connection connection = DBWorker.getConnection();
