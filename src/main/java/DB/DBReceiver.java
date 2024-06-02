@@ -3,6 +3,7 @@ package DB;
 import Commands.Command;
 import Organization.*;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.util.*;
@@ -230,6 +231,8 @@ public class DBReceiver {
                 Connection connection = new DBWorker().getConnection();
                 Statement statement = connection.createStatement();
                 statement.execute(query);
+            } catch (PSQLException e) {
+                System.out.println("Такое имя пользователя уже есть");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -264,44 +267,26 @@ public class DBReceiver {
         String correctName;
         System.out.println("Enter password: ");
         String password = scanner.nextLine();
-        DBUserChecker.checkUser(name, password);
-        String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
-        try {
-            Statement statement = new DBWorker().getConnection().createStatement();
-            ResultSet rs = statement.executeQuery(queryUser);
-            if (rs.next()) {
-                correctName = rs.getString(1);
-            } else {
-                return;
-            }
-        } catch (SQLException e) {
-            System.out.println("Can't define the creator of this organization...");
-            return;
-        }
         if (DBUserChecker.checkUser(name, password)) {
-            if (name.equals(correctName)) {
-                try {
-                    Optional<Organization> optionalOrganization = organizationCollection.getCollection().stream().filter(o -> o.getId() == id).findFirst();
-                    if (optionalOrganization.isEmpty()) {
-                        System.out.println("В коллекции нет организации с таким ID");
-                        return;
-                    }
-                    Organization organization = optionalOrganization.get();
-                    List<Organization> list = organizationCollection.getCollection().stream().filter(o -> o.getAnnualTurnover() + o.getEmployeesCount()
-                            < organization.getAnnualTurnover() + organization.getEmployeesCount()).toList();
-                    long id2;
-                    for (int i = 0; i < list.size(); i++) {
-                        id2 = list.get(i).getId();
-                        String query = "DELETE FROM s409333.\"Organization\" WHERE id = " + id2 + ", user_name = " + name;
-                        Statement statement = new DBWorker().getConnection().createStatement();
-                        statement.execute(query);
-                        UpdaterOfCollection.updateCollection(organizationCollection);
-                    }
-                } catch (SQLException e) {
-                    System.out.println("Error by updating organization...");
+            try {
+                Optional<Organization> optionalOrganization = organizationCollection.getCollection().stream().filter(o -> o.getId() == id).findFirst();
+                if (optionalOrganization.isEmpty()) {
+                    System.out.println("В коллекции нет организации с таким ID");
+                    return;
                 }
-            } else {
-                System.out.println("You haven't access to this organization...");
+                Organization organization = optionalOrganization.get();
+                List<Organization> list = organizationCollection.getCollection().stream().filter(o -> o.getAnnualTurnover() + o.getEmployeesCount()
+                        < organization.getAnnualTurnover() + organization.getEmployeesCount()).toList();
+                long id2;
+                for (int i = 0; i < list.size(); i++) {
+                    id2 = list.get(i).getId();
+                    String query = "DELETE FROM s409333.\"Organization\" WHERE id = " + id2 + " and user_name = '" + name + "'";
+                    Statement statement = new DBWorker().getConnection().createStatement();
+                    statement.execute(query);
+                    UpdaterOfCollection.updateCollection(organizationCollection);
+                }
+            } catch (SQLException e) {
+                System.out.println("Error by updating organization...");
             }
         }
     }
@@ -324,40 +309,44 @@ public class DBReceiver {
             }
             int amount = organizationCollection.getAmountOfElements();
             long id = 0;
-            Optional<Organization> organization = organizationCollection.getCollection().stream().filter(o -> o.getType() == organizationCollection.getLastOrganizationTypeWorkedWith()).findAny();
+            List<Organization> organization = organizationCollection.getCollection().stream().filter(o -> o.getType() == organizationCollection.getLastOrganizationTypeWorkedWith()).toList();
             if (organization.isEmpty()) {
                 System.out.println("There isn't any organization with type: " + organizationCollection.getLastOrganizationTypeWorkedWith().name);
                 return;
-            } else {
-                id = organization.get().getId();
             }
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter your name: ");
             String name = scanner.nextLine();
-            String correctName;
+            String correctName = "";
             System.out.println("Enter password: ");
             String password = scanner.nextLine();
-            String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
-            try {
-                Statement statement = new DBWorker().getConnection().createStatement();
-                ResultSet rs = statement.executeQuery(queryUser);
-                if (rs.next()) {
-                    correctName = rs.getString(1);
-                } else {
+            for(int i = 0; i<organization.size(); i++){
+                id = organization.get(i).getId();
+                String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
+                try {
+                    Statement statement = new DBWorker().getConnection().createStatement();
+                    ResultSet rs = statement.executeQuery(queryUser);
+                    if (rs.next()) {
+                        correctName = rs.getString(1);
+                    } else {
+                        return;
+                    }
+                    if (correctName.equals(name)){
+                        break;
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Can't define the creator of this organization...");
                     return;
                 }
-            } catch (SQLException e) {
-                System.out.println("Can't define the creator of this organization...");
-                return;
             }
             if (DBUserChecker.checkUser(name, password)) {
                 if (name.equals(correctName)) {
                     try {
-                            String query = "DELETE  FROM s409333.\"Organization\" WHERE id = " + id;
-                            Statement statement = new DBWorker().getConnection().createStatement();
-                            statement.execute(query);
-                            UpdaterOfCollection.updateCollection(organizationCollection);
-                            organizationCollection.updateData();
+                        String query = "DELETE  FROM s409333.\"Organization\" WHERE id = " + id;
+                        Statement statement = new DBWorker().getConnection().createStatement();
+                        statement.execute(query);
+                        UpdaterOfCollection.updateCollection(organizationCollection);
+                        organizationCollection.updateData();
                         if (amount != organizationCollection.getAmountOfElements()) {
                             System.out.println("One organization with type: \"" + organizationCollection.getLastOrganizationTypeWorkedWith().name + "\" was successfully deleted");
                         }
