@@ -8,10 +8,9 @@ public class Address {
     }
 
     /**
-     *
      * @return zipCode
      */
-        public String getZipCode() {
+    public String getZipCode() {
         return zipCode;
     }
 

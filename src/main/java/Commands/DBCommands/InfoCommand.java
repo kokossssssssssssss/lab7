@@ -21,8 +21,10 @@ public class InfoCommand implements Command {
     public void execute() {
         dbReceiver.info();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

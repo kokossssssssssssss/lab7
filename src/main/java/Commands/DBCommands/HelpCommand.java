@@ -21,8 +21,10 @@ public class HelpCommand implements Command {
     public void execute() {
         dbReceiver.help();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

@@ -11,6 +11,7 @@ public interface Command {
 
     /**
      * Method returning description
+     *
      * @return Command description
      */
     String description();

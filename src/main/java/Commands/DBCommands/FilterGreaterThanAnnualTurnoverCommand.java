@@ -21,8 +21,10 @@ public class FilterGreaterThanAnnualTurnoverCommand implements Command {
     public void execute() {
         dbReceiver.filterTurnover();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

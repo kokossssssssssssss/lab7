@@ -8,7 +8,7 @@ import Organization.OrganizationCollection;
 import java.util.Scanner;
 
 public class DBUser {
-    public static void toStart(){
+    public static void toStart() {
         OrganizationCollection organizationCollection = new OrganizationCollection(DBParser.getOrganizationsFromDB());
         DBReceiver dbReceiver = new DBReceiver(organizationCollection);
         DBInvoker dbInvoker = new DBInvoker(
@@ -26,25 +26,22 @@ public class DBUser {
                 new RegisterCommand(dbReceiver),
                 new PrintAscendingCommand(dbReceiver),
                 new RemoveAnyByTypeCommand(dbReceiver),
-                new RemoveLowerCommand(dbReceiver)
+                new RemoveLowerCommand(dbReceiver),
+                new ExecuteScriptCommand(dbReceiver)
         );
         dbReceiver.setCommands(dbInvoker.getCommandMap());
-
-        while(true){
+        while (true) {
             System.out.println("Enter the command: ");
-
             Scanner scanner = new Scanner(System.in);
             String request = scanner.nextLine();
             String[] tokens = request.split(" ");
             dbReceiver.setTokens(tokens);
-
             Command command = dbInvoker.commandMap.get(tokens[0]);
-            try{
+            try {
                 command.execute();
             } catch (Exception e) {
                 System.out.println("Unknown command...");
             }
-
         }
     }
 }

@@ -16,12 +16,14 @@ public class SortCommand implements Command {
 
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override
     public String description() {
         return "sort: отсортировать коллекцию в естественном порядке";
     }
+
     /**
      * The command that calls the required method from {@link CommandManager}
      */

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * The class whose objects the command works with
  */
-public class Organization implements Comparable<Organization>{
+public class Organization implements Comparable<Organization> {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -83,7 +83,7 @@ public class Organization implements Comparable<Organization>{
     public String toString() {
         return "\nOrganization:\n" +
                 "id: " + id +
-                ", name: " + name  +
+                ", name: " + name +
                 ", coordinates: " + coordinates +
                 ", creationDate: " + creationDate +
                 ", annualTurnover: " + annualTurnover +
@@ -95,17 +95,18 @@ public class Organization implements Comparable<Organization>{
 
     /**
      * this method allows to compare organizations
+     *
      * @param or the object to be compared.
      * @return
      */
     @Override
     public int compareTo(Organization or) {
-            if(id == or.getId()){
-                return 0;
-            }
-            if(id < or.getId()){
-                return -1;
-            }
-            return 1;
+        if (id == or.getId()) {
+            return 0;
         }
+        if (id < or.getId()) {
+            return -1;
+        }
+        return 1;
+    }
 }

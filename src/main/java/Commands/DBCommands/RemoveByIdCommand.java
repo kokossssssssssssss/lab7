@@ -21,8 +21,10 @@ public class RemoveByIdCommand implements Command {
     public void execute() {
         dbReceiver.removeById();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

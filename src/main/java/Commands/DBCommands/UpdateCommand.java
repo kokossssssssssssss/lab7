@@ -21,8 +21,10 @@ public class UpdateCommand implements Command {
     public void execute() {
         dbReceiver.update();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

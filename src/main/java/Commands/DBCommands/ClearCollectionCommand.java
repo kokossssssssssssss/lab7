@@ -22,8 +22,10 @@ public class ClearCollectionCommand implements Command {
     public void execute() {
         dbReceiver.clear();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

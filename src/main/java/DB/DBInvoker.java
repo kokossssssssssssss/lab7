@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DBInvoker {
-    Map<String, Command> commandMap= new HashMap<>();
+    Map<String, Command> commandMap = new HashMap<>();
 
-    public DBInvoker(Command add, Command show, Command removeById, Command help, Command clear, Command filterTurnover, Command update, Command exit, Command insertAt, Command sort, Command info, Command register, Command printAscending, Command removeByType, Command removeLower) {
+    public DBInvoker(Command add, Command show, Command removeById, Command help, Command clear, Command filterTurnover, Command update, Command exit, Command insertAt, Command sort, Command info, Command register, Command printAscending, Command removeByType, Command removeLower, Command execute) {
         commandMap.put("add", add);
         commandMap.put("show", show);
         commandMap.put("remove_by_id", removeById);
@@ -24,13 +24,14 @@ public class DBInvoker {
         commandMap.put("remove_lower", removeLower);
         commandMap.put("remove_any_by_type", removeByType);
         commandMap.put("print_ascending", printAscending);
+        commandMap.put("execute_script", execute);
     }
 
     public Map<String, Command> getCommandMap() {
         return commandMap;
     }
 
-    public void executeCommand(String commandName){
+    public void executeCommand(String commandName) {
         Command command = commandMap.get(commandName);
         command.execute();
     }

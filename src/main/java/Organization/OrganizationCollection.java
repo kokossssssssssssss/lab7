@@ -40,7 +40,7 @@ public class OrganizationCollection {
 
     @Override
     public String toString() {
-        return  "\n1. Initialization date: " + initializationDate +
+        return "\n1. Initialization date: " + initializationDate +
                 "\n2. Collection type: " + collectionType +
                 "\n3. Internal files type: " + internalFileType +
                 "\n4. Amount of elements: " + amountOfElements;
@@ -67,8 +67,8 @@ public class OrganizationCollection {
     }
 
     public int setLastIdWorkedWith(long lastIdWorkedWith) {
-        List<Organization> list1 = getCollection().stream().filter(o -> o.getId()==lastIdWorkedWith).toList();
-        if(list1.isEmpty()){
+        List<Organization> list1 = getCollection().stream().filter(o -> o.getId() == lastIdWorkedWith).toList();
+        if (list1.isEmpty()) {
             return -1;
         }
         this.lastIdWorkedWith = lastIdWorkedWith;
@@ -80,7 +80,7 @@ public class OrganizationCollection {
     }
 
     public int setLastIndexWorkedWith(int lastIndexWorkedWith) {
-        if(getCollection().size()-1<lastIndexWorkedWith){
+        if (getCollection().size() - 1 < lastIndexWorkedWith) {
             return -1;
         }
         this.lastIndexWorkedWith = lastIndexWorkedWith;

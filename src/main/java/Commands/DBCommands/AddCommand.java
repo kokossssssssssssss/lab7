@@ -21,8 +21,10 @@ public class AddCommand implements Command {
     public void execute() {
         dbReceiver.add();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

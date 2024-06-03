@@ -21,8 +21,10 @@ public class ExitCommand implements Command {
     public void execute() {
         dbReceiver.exit();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

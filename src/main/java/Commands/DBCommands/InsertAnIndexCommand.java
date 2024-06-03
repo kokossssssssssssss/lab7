@@ -21,8 +21,10 @@ public class InsertAnIndexCommand implements Command {
     public void execute() {
         dbReceiver.insertAt();
     }
+
     /**
      * Method that returns command description
+     *
      * @return Command description
      */
     @Override

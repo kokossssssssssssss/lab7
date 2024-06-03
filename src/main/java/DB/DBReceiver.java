@@ -5,6 +5,7 @@ import Organization.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.postgresql.util.PSQLException;
 
+import java.io.File;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -12,11 +13,12 @@ import java.util.logging.Logger;
 
 public class DBReceiver {
     private static final Logger logger = Logger.getLogger(DBReceiver.class.getName());
-
-
     private OrganizationCollection organizationCollection;
     private String[] tokens;
     private Map<String, Command> commands;
+    private Set<String> scriptHistory = new HashSet<>();
+    private String[] compositeCommand = new String[9];
+    private boolean isScriptWorking = false;
 
     public DBReceiver(OrganizationCollection organizationCollection) {
         this.organizationCollection = organizationCollection;
@@ -30,16 +32,34 @@ public class DBReceiver {
         this.commands = commands;
     }
 
-    public void add() {
+    public void clearCompositeCommand() {
+        compositeCommand = new String[9];
+    }
 
+    public void setCompositeCommand(String[] compositeCommand) {
+        this.compositeCommand = compositeCommand;
+    }
+
+    public String[] getCompositeCommand() {
+        return compositeCommand;
+    }
+
+    public boolean isScriptWorking() {
+        return isScriptWorking;
+    }
+
+    public void setScriptWorking(boolean scriptWorking) {
+        isScriptWorking = scriptWorking;
+    }
+
+    public void add() {
         try {
-            DBFiller.fill();
+            DBFiller.fill(this);
             UpdaterOfCollection.updateCollection(organizationCollection);
         } catch (SQLException e) {
             System.out.println("Failed to add organization...");
         }
     }
-
 
     public void show() {
         for (Organization organization : organizationCollection.getCollection()) {
@@ -48,13 +68,17 @@ public class DBReceiver {
     }
 
     public void removeById() {
-        int id = Integer.parseInt(tokens[1]);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name: ");
-        String name = scanner.nextLine();
+        int id = 0;
+        if (isScriptWorking) {
+            id = Integer.parseInt(compositeCommand[0]);
+            compositeCommand = Arrays.copyOfRange(compositeCommand, 1, compositeCommand.length);
+        } else {
+            id = Integer.parseInt(tokens[1]);
+        }
+        String[] data = authorization();
+        String name = data[0];
+        String password = data[1];
         String correctName;
-        System.out.println("Enter password: ");
-        String password = scanner.nextLine();
         DBUserChecker.checkUser(name, password);
         if (!new CheckerOfOrganization(organizationCollection).checkById(id)) {
             return;
@@ -96,22 +120,16 @@ public class DBReceiver {
     }
 
     public void clear() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name: ");
-        String name = scanner.nextLine();
-        System.out.println("Enter password: ");
-        String password = scanner.nextLine();
+        String[] data = authorization();
+        String name = data[0];
+        String password = data[1];
         if (DBUserChecker.checkUser(name, password)) {
             String queryOrgs = "DELETE FROM s409333.\"Organization\" where \"user_name\" = '" + name + "'";
             try {
                 Statement statement = new DBWorker().getConnection().createStatement();
-
-
                 int deletedOrgs = statement.executeUpdate(queryOrgs);
                 System.out.println("Number of deleted organizations: " + deletedOrgs);
                 UpdaterOfCollection.updateCollection(organizationCollection);
-
-
             } catch (SQLException e) {
                 System.out.println("Error by removing...");
                 e.printStackTrace();
@@ -120,8 +138,12 @@ public class DBReceiver {
     }
 
     public void filterTurnover() {
-        int annualTurnover = Integer.parseInt(tokens[1]);
-
+        int annualTurnover = 0;
+        if (isScriptWorking) {
+            annualTurnover = Integer.parseInt(compositeCommand[0]);
+        } else {
+            annualTurnover = Integer.parseInt(tokens[1]);
+        }
         Iterator<Organization> iterator = organizationCollection.getCollection().iterator();
         while (iterator.hasNext()) {
             Organization organization = iterator.next();
@@ -132,18 +154,21 @@ public class DBReceiver {
     }
 
     public void update() {
-        int id = Integer.parseInt(tokens[1]);
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name: ");
-        String name = scanner.nextLine();
+        int id;
+        if (isScriptWorking) {
+            id = Integer.parseInt(compositeCommand[0]);
+            compositeCommand = Arrays.copyOfRange(compositeCommand, 1, compositeCommand.length);
+        } else {
+            id = Integer.parseInt(tokens[1]);
+        }
+        String[] data = authorization();
+        String name = data[0];
+        String password = data[1];
         String correctName;
-        System.out.println("Enter password: ");
-        String password = scanner.nextLine();
         DBUserChecker.checkUser(name, password);
         if (!new CheckerOfOrganization(organizationCollection).checkById(id)) {
             return;
         }
-
         String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
         try {
             Statement statement = new DBWorker().getConnection().createStatement();
@@ -160,7 +185,7 @@ public class DBReceiver {
         if (DBUserChecker.checkUser(name, password)) {
             if (name.equals(correctName)) {
                 try {
-                    DBFillerForUpdate.fill(id);
+                    DBFiller.fillForUpdate(this, id);
                     UpdaterOfCollection.updateCollection(organizationCollection);
                 } catch (SQLException e) {
                     System.out.println("Error by updating organization...");
@@ -178,13 +203,19 @@ public class DBReceiver {
     }
 
     public void insertAt() {
-        int index = Integer.parseInt(tokens[1]);
+        int index;
+        if (isScriptWorking) {
+            index = Integer.parseInt(compositeCommand[0]);
+            compositeCommand = Arrays.copyOfRange(compositeCommand, 1, compositeCommand.length);
+        } else {
+            index = Integer.parseInt(tokens[1]);
+        }
         if (!(index >= 0 && index <= organizationCollection.getCollection().size())) {
             System.out.println("Invalid index...");
             return;
         }
         try {
-            DBFiller.fill();
+            DBFiller.fill(this);
         } catch (SQLException e) {
             System.out.println("Error by creating organization...");
         }
@@ -192,11 +223,8 @@ public class DBReceiver {
         Organization maxIdOrganization = organizationCollection.getCollection().stream()
                 .max(Comparator.comparingLong(Organization::getId))
                 .orElseThrow(NoSuchElementException::new);
-
-
         // Вставляем элемент по индексу
         organizationCollection.getCollection().add(index, maxIdOrganization);
-
         // Удаляем последний элемент, если коллекция стала больше нужного размера
         if (organizationCollection.getCollection().size() > index + 1) {
             organizationCollection.getCollection().remove(organizationCollection.getCollection().size() - 1);
@@ -216,14 +244,10 @@ public class DBReceiver {
     }
 
     public void register() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.println("Enter password: ");
-        String password1 = scanner.nextLine();
-        System.out.println("Repeat password: ");
-        String password2 = scanner.nextLine();
+        String[] data = registration();
+        String name = data[0];
+        String password1 = data[1];
+        String password2 = data[2];
         if (password1.equals(password2)) {
             String hash_password = DigestUtils.sha3_224Hex(password2);
             String query = "INSERT INTO s409333.\"User\" (name, password) VALUES ('" + name + "', '" + hash_password + "');";
@@ -244,7 +268,12 @@ public class DBReceiver {
     public void removeLower() {
         long id;
         try {
-            id = Long.parseLong(tokens[1]);
+            if (isScriptWorking) {
+                id = Long.parseLong(compositeCommand[0]);
+                compositeCommand = Arrays.copyOfRange(compositeCommand, 1, compositeCommand.length);
+            } else {
+                id = Long.parseLong(tokens[1]);
+            }
             if (id < 0) {
                 throw new ArithmeticException();
             }
@@ -261,12 +290,9 @@ public class DBReceiver {
             System.out.println("Please, enter the id in the command");
             return;
         }
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your name: ");
-        String name = scanner.nextLine();
-        String correctName;
-        System.out.println("Enter password: ");
-        String password = scanner.nextLine();
+        String[] data = authorization();
+        String name = data[0];
+        String password = data[1];
         if (DBUserChecker.checkUser(name, password)) {
             try {
                 Optional<Organization> optionalOrganization = organizationCollection.getCollection().stream().filter(o -> o.getId() == id).findFirst();
@@ -294,7 +320,12 @@ public class DBReceiver {
     public void removeByType() {
         try {
             String organizationType;
-            organizationType = tokens[1];
+            if (isScriptWorking) {
+                organizationType = compositeCommand[0];
+                compositeCommand = Arrays.copyOfRange(compositeCommand, 1, compositeCommand.length);
+            } else {
+                organizationType = tokens[1];
+            }
             int count = 0;
             for (OrganizationType orgT : OrganizationType.values()) {
                 if (organizationType.equalsIgnoreCase(orgT.name)) {
@@ -314,13 +345,11 @@ public class DBReceiver {
                 System.out.println("There isn't any organization with type: " + organizationCollection.getLastOrganizationTypeWorkedWith().name);
                 return;
             }
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Enter your name: ");
-            String name = scanner.nextLine();
+            String[] data = authorization();
+            String name = data[0];
+            String password = data[1];
             String correctName = "";
-            System.out.println("Enter password: ");
-            String password = scanner.nextLine();
-            for(int i = 0; i<organization.size(); i++){
+            for (int i = 0; i < organization.size(); i++) {
                 id = organization.get(i).getId();
                 String queryUser = "select \"user_name\" from s409333.\"Organization\" where id = " + id;
                 try {
@@ -331,7 +360,7 @@ public class DBReceiver {
                     } else {
                         return;
                     }
-                    if (correctName.equals(name)){
+                    if (correctName.equals(name)) {
                         break;
                     }
                 } catch (SQLException e) {
@@ -367,6 +396,80 @@ public class DBReceiver {
     public void printAscending() {
         sort();
         System.out.println(organizationCollection.getCollection());
+    }
+
+    public void executeScript() {
+        try {
+            File script;
+            if (isScriptWorking) {
+                script = new File(compositeCommand[0]);
+            } else {
+                script = new File(tokens[1]);
+            }
+            if (!script.exists()) {
+                System.out.println("Specified file is not exist");
+                return;
+            }
+            if (scriptHistory.contains(compositeCommand[0])) {
+                System.out.println("This script has already been executed");
+                return;
+            }
+            if (isScriptWorking) {
+                scriptHistory.add(compositeCommand[0]);
+            } else {
+                scriptHistory.add(tokens[1]);
+            }
+            isScriptWorking = true;
+            ScriptManager scriptManager = new ScriptManager(script, commands, this);
+            System.out.println("Script is executing");
+            if (isScriptWorking) {
+                clearCompositeCommand();
+            }
+            scriptManager.executeScript();
+            isScriptWorking = false;
+            System.out.println("Script executed successfully");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Please, enter the file name in the command");
+        }
+    }
+
+    public String[] authorization() {
+        String[] data = new String[2];
+        if (isScriptWorking) {
+            data[0] = compositeCommand[0];
+            data[1] = compositeCommand[1];
+            compositeCommand = Arrays.copyOfRange(compositeCommand, 2, compositeCommand.length);
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter your name: ");
+            String name = scanner.nextLine();
+            System.out.println("Enter password: ");
+            String password = scanner.nextLine();
+            data[0] = name;
+            data[1] = password;
+        }
+        return data;
+    }
+
+    public String[] registration() {
+        String[] data = new String[3];
+        if (isScriptWorking) {
+            data[0] = compositeCommand[0];
+            data[1] = compositeCommand[1];
+            data[2] = compositeCommand[2];
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter your name: ");
+            String name = scanner.nextLine();
+            System.out.println("Enter password: ");
+            String password = scanner.nextLine();
+            System.out.println("Repeat password: ");
+            String password2 = scanner.nextLine();
+            data[0] = name;
+            data[1] = password;
+            data[2] = password2;
+        }
+        return data;
     }
 }
 
