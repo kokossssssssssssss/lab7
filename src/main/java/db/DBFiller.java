@@ -32,9 +32,8 @@ public class DBFiller {
 
     public static void fill(DBReceiver dbReceiver1) throws SQLException {
         dbReceiver = dbReceiver1;
-        String[] data = dbReceiver.authorization();
-        String name = data[0];
-        String password = data[1];
+        String name = dbReceiver.getName();
+        String password = dbReceiver.getPassword();
         if (DBUserChecker.checkUser(name, password)) {
             String query = "insert into s409333.\"Organization\" ( \"name\", \"Coordinates_ID\", \"annualTurnover\", \"employeesCount\",  \"type\", \"postalAddress_ID\", \"user_name\") values ( ?, ?, ?, ?, ?, ?, ?)";
             Connection connection = new DBWorker().getConnection(); // Получаем соединение с базой данных

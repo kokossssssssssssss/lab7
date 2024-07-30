@@ -8,7 +8,6 @@ public class DBUserChecker {
     public static boolean checkUser(String name, String password) {
         if (checkUserName(name)) {
             if (checkPassword(name, password)) {
-                System.out.println("Password is correct...");
                 return true;
             } else {
                 System.out.println("Password isn't correct...");

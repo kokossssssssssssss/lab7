@@ -24,7 +24,6 @@ public class DBParser {
                     Organization organization = new Organization();
                     organization.setId(resultSet.getLong(1));
                     organization.setName(resultSet.getString(2));
-
                     Coordinates coordinates = getCoordinatesFromDB(connection, resultSet.getInt(3));
                     if (coordinates != null) {
                         organization.setCoordinates(coordinates);
@@ -32,11 +31,9 @@ public class DBParser {
                         logger.log(Level.SEVERE, "Failed to retrieve coordinates for organization ID: " + resultSet.getLong("id"));
                         continue;
                     }
-
                     organization.setCreationDate(resultSet.getDate(4));
                     organization.setAnnualTurnover(resultSet.getLong(5));
                     organization.setEmployeesCount(resultSet.getLong(6));
-
                     String typeStr = resultSet.getString(7);
                     try {
                         organization.setType(OrganizationType.valueOf(typeStr));
@@ -44,7 +41,6 @@ public class DBParser {
                         logger.log(Level.SEVERE, "Invalid organization type for organization ID: " + resultSet.getLong("id"), e);
                         continue;
                     }
-
                     Address address = getAddressFromDB(connection, resultSet.getInt(8));
                     if (address != null) {
                         organization.setPostalAddress(address);
@@ -52,7 +48,6 @@ public class DBParser {
                         logger.log(Level.SEVERE, "Failed to retrieve address for organization ID: " + resultSet.getLong("id"));
                         continue;
                     }
-
                     organizations.add(organization);
                 } catch (SQLException e) {
                     logger.log(Level.SEVERE, "Error parsing organization with ID: " + resultSet.getLong("id"), e);

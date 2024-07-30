@@ -45,17 +45,6 @@ public class OrganizationCollection {
                 "\n4. Amount of elements: " + amountOfElements;
     }
 
-    public long getLastIdWorkedWith() {
-        return lastIdWorkedWith;
-    }
-
-    public long getLastAnnualTurnoverWorkedWith() {
-        return lastAnnualTurnoverWorkedWith;
-    }
-
-    public void setLastAnnualTurnoverWorkedWith(long lastAnnualTurnoverWorkedWith) {
-        this.lastAnnualTurnoverWorkedWith = lastAnnualTurnoverWorkedWith;
-    }
 
     public OrganizationType getLastOrganizationTypeWorkedWith() {
         return lastOrganizationTypeWorkedWith;
@@ -63,27 +52,6 @@ public class OrganizationCollection {
 
     public void setLastOrganizationTypeWorkedWith(OrganizationType lastOrganizationTypeWorkedWith) {
         this.lastOrganizationTypeWorkedWith = lastOrganizationTypeWorkedWith;
-    }
-
-    public int setLastIdWorkedWith(long lastIdWorkedWith) {
-        List<Organization> list1 = getCollection().stream().filter(o -> o.getId() == lastIdWorkedWith).toList();
-        if (list1.isEmpty()) {
-            return -1;
-        }
-        this.lastIdWorkedWith = lastIdWorkedWith;
-        return 1;
-    }
-
-    public int getLastIndexWorkedWith() {
-        return lastIndexWorkedWith;
-    }
-
-    public int setLastIndexWorkedWith(int lastIndexWorkedWith) {
-        if (getCollection().size() - 1 < lastIndexWorkedWith) {
-            return -1;
-        }
-        this.lastIndexWorkedWith = lastIndexWorkedWith;
-        return 1;
     }
 
     public int getAmountOfElements() {

@@ -1,12 +1,17 @@
 package db;
 
 import commands.Command;
+import exceptions.NoLoginException;
+import exceptions.NullValueException;
 import organization.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.postgresql.util.PSQLException;
 
 import java.io.File;
 import java.sql.*;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -19,9 +24,19 @@ public class DBReceiver {
     private Set<String> scriptHistory = new HashSet<>();
     private String[] compositeCommand = new String[9];
     private boolean isScriptWorking = false;
+    private String name;
+    private String password;
 
     public DBReceiver(OrganizationCollection organizationCollection) {
         this.organizationCollection = organizationCollection;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setTokens(String[] tokens) {
@@ -48,10 +63,6 @@ public class DBReceiver {
         return isScriptWorking;
     }
 
-    public void setScriptWorking(boolean scriptWorking) {
-        isScriptWorking = scriptWorking;
-    }
-
     public void add() {
         try {
             DBFiller.fill(this);
@@ -62,8 +73,10 @@ public class DBReceiver {
     }
 
     public void show() {
+        System.out.println("Текущий пользователь: " + name);
+        System.out.println("Текущая дата: " + LocalDate.now());
         for (Organization organization : organizationCollection.getCollection()) {
-            System.out.println(organization);
+            System.out.print(organization);
         }
     }
 
@@ -75,9 +88,6 @@ public class DBReceiver {
         } else {
             id = Integer.parseInt(tokens[1]);
         }
-        String[] data = authorization();
-        String name = data[0];
-        String password = data[1];
         String correctName;
         DBUserChecker.checkUser(name, password);
         if (!new CheckerOfOrganization(organizationCollection).checkById(id)) {
@@ -120,9 +130,6 @@ public class DBReceiver {
     }
 
     public void clear() {
-        String[] data = authorization();
-        String name = data[0];
-        String password = data[1];
         if (DBUserChecker.checkUser(name, password)) {
             String queryOrgs = "DELETE FROM s409333.\"Organization\" where \"user_name\" = '" + name + "'";
             try {
@@ -161,9 +168,6 @@ public class DBReceiver {
         } else {
             id = Integer.parseInt(tokens[1]);
         }
-        String[] data = authorization();
-        String name = data[0];
-        String password = data[1];
         String correctName;
         DBUserChecker.checkUser(name, password);
         if (!new CheckerOfOrganization(organizationCollection).checkById(id)) {
@@ -261,13 +265,17 @@ public class DBReceiver {
                 Connection connection = new DBWorker().getConnection();
                 Statement statement = connection.createStatement();
                 statement.execute(query);
+                this.name = name;
+                this.password = password1;
+                DBUser.setLogged(true);
+                System.out.println("Новый пользователь успешно авторизован");
             } catch (PSQLException e) {
                 System.out.println("Такое имя пользователя уже есть");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            System.out.println("Entered passwords don't match...");
+            System.out.println("Введенные пароли не совпадают...");
         }
     }
 
@@ -296,9 +304,6 @@ public class DBReceiver {
             System.out.println("Please, enter the id in the command");
             return;
         }
-        String[] data = authorization();
-        String name = data[0];
-        String password = data[1];
         if (DBUserChecker.checkUser(name, password)) {
             try {
                 Optional<Organization> optionalOrganization = organizationCollection.getCollection().stream().filter(o -> o.getId() == id).findFirst();
@@ -351,9 +356,6 @@ public class DBReceiver {
                 System.out.println("There isn't any organization with type: " + organizationCollection.getLastOrganizationTypeWorkedWith().name);
                 return;
             }
-            String[] data = authorization();
-            String name = data[0];
-            String password = data[1];
             String correctName = "";
             for (int i = 0; i < organization.size(); i++) {
                 id = organization.get(i).getId();
@@ -439,11 +441,17 @@ public class DBReceiver {
         }
     }
 
-    public String[] authorization() {
-        String[] data = new String[2];
+    public void authorization() throws NoLoginException {
         if (isScriptWorking) {
-            data[0] = compositeCommand[0];
-            data[1] = compositeCommand[1];
+            String name = compositeCommand[0];
+            String password = compositeCommand[1];
+            boolean isLogged = DBUserChecker.checkUser(name, password);
+            if(!isLogged){
+                throw new NoLoginException();
+            }
+            DBUser.setLogged(true);
+            this.name = name;
+            this.password = password;
             compositeCommand = Arrays.copyOfRange(compositeCommand, 2, compositeCommand.length);
         } else {
             Scanner scanner = new Scanner(System.in);
@@ -451,11 +459,16 @@ public class DBReceiver {
             String name = scanner.nextLine();
             System.out.println("Enter password: ");
             String password = scanner.nextLine();
-            data[0] = name;
-            data[1] = password;
+            boolean isLogged = DBUserChecker.checkUser(name, password);
+            if(!isLogged){
+                throw new NoLoginException();
+            }
+            DBUser.setLogged(true);
+            this.name = name;
+            this.password = password;
         }
-        return data;
-    }
+        }
+
 
     public String[] registration() throws NullValueException{
         String[] data = new String[3];
@@ -488,6 +501,10 @@ public class DBReceiver {
             data[2] = password2;
         }
         return data;
+    }
+    public void logout(){
+        DBUser.setLogged(false);
+        System.out.println("Вы вышли из профиля");
     }
 }
 

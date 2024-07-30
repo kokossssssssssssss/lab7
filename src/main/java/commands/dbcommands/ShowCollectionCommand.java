@@ -25,7 +25,7 @@ public class ShowCollectionCommand implements Command {
     }
 
     /**
-     * The command that calls the required method from {@link CommandManager}
+     * The command that calls the required method from {@link DBReceiver}
      */
     @Override
     public void execute() {
